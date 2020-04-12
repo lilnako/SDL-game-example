@@ -1,10 +1,6 @@
 #include "game.h"
 
-bool is_running = true;
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
-
-int init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+int init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, Game* game)
 {
     int flags = 0;
     //bool for fullscreen. if fullscreen is true, it sets flags to the value
@@ -21,16 +17,16 @@ int init(const char* title, int xpos, int ypos, int width, int height, bool full
         return EXIT_FAILURE;
     }
     //if the SDL_Init was successful, the window will be created
-    window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
-    if (!window)
+    game->window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+    if (!game->window)
     {
         fprintf(stderr, "Error: Could not create window (SDL_CreateWindow)");
         return EXIT_FAILURE;
     }
     //if window creation was successful, then the renderer will be created.
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    if (!renderer)
+    game->renderer = SDL_CreateRenderer(game->window, -1, 0);
+    SDL_SetRenderDrawColor(game->renderer, 255, 255, 255, 255);
+    if (!game->renderer)
     {
         fprintf(stderr, "Error: Could not create renderer (SDL_CreateRenderer)");
         return EXIT_FAILURE;
@@ -38,42 +34,49 @@ int init(const char* title, int xpos, int ypos, int width, int height, bool full
     return EXIT_SUCCESS;
 }
 
-void handle_events()
+void handle_events(Game* game)
 {
     SDL_Event event;
     SDL_PollEvent(&event);
     switch (event.type)
     {
     case SDL_QUIT:
-        is_running = false;
+        game->is_running = false;
         break;
-    
+        
     default:
         break;
     }
 }
-void update()
+void update(void)
 {
 
 }
-void render()
+void render(Game* game)
 {
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(game->renderer);
     //add things to render here
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(game->renderer);
 }
-void clean()
+void clean(Game* game)
 {
- SDL_DestroyWindow(window);
- SDL_DestroyRenderer(renderer);
+ SDL_DestroyWindow(game->window);
+ SDL_DestroyRenderer(game->renderer);
  SDL_Quit();
  fprintf(stdout, "Game cleaned sucessfully\n");
 }
 
-
-
-bool running()
+Game* game_ctruct(void)
 {
-    return is_running;
+    Game* game = (Game*)malloc(sizeof(Game));
+    game->is_running = true;
+    game->renderer = NULL;
+    game->window = NULL;
+    return game;
+}
+
+bool running(Game* game)
+{
+    return game->is_running;
 }
 

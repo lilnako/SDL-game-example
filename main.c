@@ -5,13 +5,14 @@
 
 int main()
 {
-    init("game window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
-    while (is_running)
+    Game* game = game_ctruct();
+    init("game window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false, game);
+    while (game->is_running)
     {
-        handle_events();
+        handle_events(game);
         update();
-        render();
+        render(game);
     }
     
-    clean();
+    clean(game);
 }

@@ -4,21 +4,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-// typedef struct Game
-// {
-//     ;
-// } Game;
+typedef struct Game
+{
+    bool is_running;
+    SDL_Window* window;
+    SDL_Renderer* renderer;  
+} Game;
 
-void game_ctruct(void);
-int init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-void handle_events(void);
+Game* game_ctruct(void);
+int init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, Game* game);
+void handle_events(Game* game);
 void update(void);
-void render(void);
-void clean(void);
-bool running(void);
+void render(Game* game);
+void clean(Game* game);
+bool running(Game* game);
 
-extern bool is_running;
-extern SDL_Window* window;
-extern SDL_Renderer* renderer;
+bool is_running;
+SDL_Window* window;
+SDL_Renderer* renderer;
 
 #endif
